@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: SF-Pro;
+    font-weight: 300;
+    src: url(./app/assets/fonts/SFProDisplay-Light.woff) format("woff");
+    src: url(./app/assets/fonts/SFProDisplay-Light.woff2) format("woff2");
+  }
+  @font-face {
+    font-family: SF-Pro;
+    font-weight: 400;
+    src: url(./app/assets/fonts/SFProDisplay-Regular.woff) format("woff");
+    src: url(./app/assets/fonts/SFProDisplay-Regular.woff2) format("woff2");
+  }
+  @font-face {
+    font-family: SF-Pro;
+    font-weight: 500;
+    src: url(./app/assets/fonts/SFProDisplay-Medium.woff) format("woff");
+    src: url(./app/assets/fonts/SFProDisplay-Medium.woff2) format("woff2");
+  }
+  @font-face {
+    font-family: SF-Pro;
+    font-weight: 600;
+    src: url(./app/assets/fonts/SFProDisplay-Semibold.woff) format("woff");
+    src: url(./app/assets/fonts/SFProDisplay-Semibold.woff2) format("woff2");
+  }
+
+  @font-face {
+    font-family: SF-Pro;
+    font-weight: 700;
+    src: url(./app/assets/fonts/SFProDisplay-Bold.woff) format("woff");
+    src: url(./app/assets/fonts/SFProDisplay-Bold.woff2) format("woff2");
+  }
+}
