@@ -6,6 +6,7 @@ const initialState = {
   hasError: "",
   height: "",
   searchTerm: "",
+  filter: [],
 };
 
 export const appSlice = createSlice({
@@ -14,6 +15,9 @@ export const appSlice = createSlice({
   reducers: {
     appLoading: (state) => {
       state.isLoading = true;
+    },
+    getArrayElements: (state, action) => {
+      state.filter = action.payload;
     },
     getDivHeight: (state, action) => {
       state.height = action.payload + 410;
@@ -36,6 +40,7 @@ export const {
   getDivHeight,
   logoutUser,
   appLoading,
+  getArrayElements,
 } = appSlice.actions;
 
 export default appSlice.reducer;
