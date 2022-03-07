@@ -19,11 +19,8 @@ import {
   CloseIcon,
 } from "../app/assets/icons/icons";
 import jpgAvatar from "../app/assets/img/jpgAvatar.jpg";
-import Filters from "./Filters";
-import Modal from "../shared/FilterModal/Modal";
 import { DefaultColmn } from "../shared/DefaultColmn";
 import Filter from "../shared/FilterModal/Filter";
-import { checkList } from "../shared/FilterModal/dummy-data";
 
 const ClientList = (props) => {
   const dispatch = useDispatch();
@@ -36,16 +33,11 @@ const ClientList = (props) => {
   const [downloadActive, setDownloadActive] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [resultsPerPage] = useState(50);
-  const [DefaultClmn, setDefaultClmn] = useState(true);
   const [Rerender, setRerender] = useState(false);
   const [isOpen, setisOpen] = useState(false);
-  const [checked, setChecked] = useState([]);
-  const [FinalList, setFinalList] = useState([]);
   const [show, setShow] = useState({});
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
-
-  let updatedList = [];
 
   // Sorting
   const [order, setOrder] = useState("asc");
@@ -122,41 +114,12 @@ const ClientList = (props) => {
     }
   }, [currentResults.length, dispatch]);
 
-  // Add/Remove checked item from list
-  const handleCheck = (event) => {
-    updatedList = [...checked];
-    if (event.target.checked) {
-      updatedList = [...checked, event.target.value];
-    } else {
-      updatedList.splice(checked.indexOf(event.target.value), 1);
-    }
-    setChecked(updatedList);
-    setFinalList(updatedList);
-    //  console.log(FinalList);
-  };
+  const data = useSelector((state) => state.Filter.filter);
+  const Default = useSelector((state) => state.Filter.DefaultColumn);
 
-  // Generate string of checked items
-  const checkedItems = checked.length
-    ? checked.reduce((total, item) => {
-        return total + ", " + item;
-      })
-    : "";
-
-  // Return classes based on whether item is checked
-  let isChecked = (item) =>
-    checked.includes(item) ? "checked-item" : "not-checked-item";
-
-  const data = useSelector((state) => state.app.filter);
-  if (data.length === 0) {
-    console.log("array is empty");
-  } else {
-    setFinalList(data);
-  }
-
-  // console.log(data);
-  useEffect(() => {
-    setRerender(false);
-  }, [Rerender]);
+  // useEffect(() => {
+  //   console.log(Default);
+  // }, [data]);
 
   return (
     <div ref={divRef} className="2xl:px-24 px-4 py-4 ">
@@ -170,46 +133,14 @@ const ClientList = (props) => {
         </button>
         <Filter
           open={isOpen}
-          IsChecked={isChecked}
-          HandleCheck={handleCheck}
-          List={checkList}
-          GeneratedList={FinalList}
-          Save={() => {
-            setDefaultClmn(false);
-            setRerender(true);
-          }}
           onClose={() => {
             setisOpen(false);
           }}
         />
       </div>
       <div className="grid grid-cols-7 grid-flow-col items-center border-b border-gray-100 bg-white px-6 py-2 pt-4">
-        {/* <div className="text-gray-400 ">Client ID</div>
-        <div className=" text-left cursor-pointer text-gray-400 ">
-          First Name
-        </div>
-        <div className="text-gray-400 ">Last Name</div>
-        <div
-          onClick={() => sorting("from_number")}
-          className="text-gray-400 hover:text-blue-500 cursor-pointer select-none"
-        >
-          Country
-        </div>
-        <div
-          onClick={() => sorting("line_number")}
-          className="text-gray-400 hover:text-blue-500 cursor-pointer select-none"
-        >
-          Is Verified
-        </div>
-        <div className="text-gray-400 mr-4">Status</div>
-        <div
-          onClick={() => numberSort("time")}
-          className="text-gray-400 col-span-2 text-right hover:text-blue-500 cursor-pointer select-none"
-        >
-          Registration
-        </div> */}
-        <div className=" w-screen h-10 flex items-center">
-          {DefaultClmn
+        <div className=" w-screen h-4 flex items-center">
+          {Default
             ? DefaultColmn.map((item) => {
                 return (
                   <div className="text-gray-400  hover:text-blue-500 cursor-pointer select-none ml-10">
@@ -217,7 +148,7 @@ const ClientList = (props) => {
                   </div>
                 );
               })
-            : FinalList.map((item) => {
+            : data.map((item) => {
                 return (
                   <div className="text-gray-400  flex justify-start items-center hover:text-blue-500 cursor-pointer select-none ml-10">
                     {item}

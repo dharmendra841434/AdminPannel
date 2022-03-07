@@ -7,6 +7,7 @@ const initialState = {
   height: "",
   searchTerm: "",
   filter: [],
+  DefaultColumn: true,
 };
 
 export const appSlice = createSlice({
@@ -15,9 +16,6 @@ export const appSlice = createSlice({
   reducers: {
     appLoading: (state) => {
       state.isLoading = true;
-    },
-    getArrayElements: (state, action) => {
-      state.filter = action.payload;
     },
     getDivHeight: (state, action) => {
       state.height = action.payload + 410;
@@ -41,6 +39,7 @@ export const {
   logoutUser,
   appLoading,
   getArrayElements,
+  setDefaultColumn,
 } = appSlice.actions;
 
 export default appSlice.reducer;
