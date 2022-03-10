@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ImCross } from "react-icons/im";
 import { useDispatch, useSelector } from "react-redux";
+import { setisOpen } from "../../features/filterSlice";
 import {
   getArrayElements,
   setDefaultColumn,
@@ -13,6 +14,7 @@ import { checkList } from "./dummy-data";
 function Filter(props) {
   const [checked, setChecked] = useState([]);
   const [FinalList, setFinalList] = useState([]);
+  const [ischecked, setischecked] = useState(false);
   const dispatch = useDispatch();
 
   const data = useSelector((state) => state.Filter.filter);
@@ -20,7 +22,7 @@ function Filter(props) {
   useEffect(() => {}, [data, Default]);
 
   // Add/Remove checked item from list
-  const handleCheck = (event) => {
+  const handleCheck = (event, index) => {
     let updatedList = [...checked];
     if (event.target.checked) {
       updatedList = [...checked, event.target.value];
@@ -28,12 +30,14 @@ function Filter(props) {
       updatedList.splice(checked.indexOf(event.target.value), 1);
     }
     setChecked(updatedList);
+    // console.log(updatedList);
     setFinalList(updatedList);
     dispatch(CountItems(updatedList.length));
-    // console.log(updatedList.length);
+    checkList[index].ischecked = true;
   };
   const total = useSelector((state) => state.Filter.totalItems);
-  //console.log(total);
+  const open = useSelector((state) => state.Filter.isOpen);
+  //console.log(FinalList);
 
   // Return classes based on whether item is checked
   let isChecked = (item) =>
@@ -42,30 +46,39 @@ function Filter(props) {
   const handleDragEnd = (e) => {
     if (!e.destination) return;
     let tempData = FinalList;
-    let [source_data] = tempData.splice(e.source.index, 1);
-    tempData.splice(e.destination.index, 0, source_data);
+    var sourceData = tempData.splice(e.source.index, 1);
+    console.log(sourceData);
+    tempData.splice(e.destination.index, 0, sourceData.toString());
     setFinalList(tempData);
   };
 
-  if (!props.open) return null;
+  if (!open) return null;
   return createPortal(
-    <div className=" fixed top-36 left-96 right-0 bottom-0 z-10 bg-yellow-700  h-96 p-2 w-1/2">
-      <button className="ml-2 mt-2" onClick={props.onClose}>
-        Close
-      </button>
+    <div className=" fixed top-40 drop-shadow-2xl rounded left-96 right-0 bottom-0 z-10 bg-yellow-700  h-96 p-2 w-1/2">
+      <ImCross
+        className=" ml-1 mt-1 hover:text-blue-500"
+        onClick={() => {
+          dispatch(setisOpen(false));
+        }}
+      />
       <div className=" justify-center ml-56">
         {checkList.map((item, index) => (
           <div key={index}>
             <input
-              value={item}
+              disabled={total < 6 ? false : !item.ischecked}
+              value={item.title}
+              // defaultChecked={}
+              checked={item.ischecked}
               type="checkbox"
-              onChange={total < 6 ? handleCheck : null}
+              onChange={(event) => {
+                handleCheck(event, index);
+              }}
             />
-            <span className={isChecked(item)}>{item}</span>
+            <span className={isChecked(item.title)}>{item.title}</span>
           </div>
         ))}
       </div>
-      <div className=" border-2 h-20 bg-white w-full border-borderColor">
+      <div className=" border-2 rounded h-20 bg-white w-full border-borderColor">
         <DragDropContext onDragEnd={handleDragEnd}>
           <div>
             <Droppable droppableId="droppable-1" direction="horizontal">
@@ -85,7 +98,6 @@ function Filter(props) {
                           className="bg-gray-600 w-28 p-0.5 flex flex-row items-center justify-center rounded mt-1 ml-1"
                         >
                           {item}
-                          <ImCross color="#2e2c2c" className=" ml-2" />
                         </div>
                       )}
                     </Draggable>
@@ -101,10 +113,15 @@ function Filter(props) {
       {total != 6 ? null : <h2>Maximum 6 items can be Selected</h2>}
       <button
         onClick={() => {
-          dispatch(getArrayElements(FinalList));
-          dispatch(setDefaultColumn(false));
+          if (FinalList.length === 0) {
+            console.log("please select one");
+          } else {
+            dispatch(getArrayElements(FinalList));
+            dispatch(setDefaultColumn(false));
+            dispatch(setisOpen(false));
+          }
         }}
-        className=" bg-blue-400 p-2 rounded mt-2 ml-72"
+        className=" bg-blue-400 p-2 rounded mt-2 ml-80 justify-center"
       >
         Save Changes
       </button>

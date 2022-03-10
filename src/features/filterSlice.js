@@ -4,6 +4,7 @@ const initialState = {
   filter: [],
   DefaultColumn: true,
   totalItems: 0,
+  isOpen: false,
 };
 
 export const appSlice = createSlice({
@@ -19,10 +20,13 @@ export const appSlice = createSlice({
     CountItems: (state, action) => {
       state.totalItems = action.payload;
     },
+    setisOpen: (state, action) => {
+      state.isOpen = action.payload;
+    },
   },
 });
 
-export const { getArrayElements, setDefaultColumn, CountItems } =
+export const { getArrayElements, setDefaultColumn, CountItems, setisOpen } =
   appSlice.actions;
 
 export default appSlice.reducer;

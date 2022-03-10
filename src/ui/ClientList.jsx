@@ -21,6 +21,7 @@ import {
 import jpgAvatar from "../app/assets/img/jpgAvatar.jpg";
 import { DefaultColmn } from "../shared/DefaultColmn";
 import Filter from "../shared/FilterModal/Filter";
+import { setisOpen } from "../features/filterSlice";
 
 const ClientList = (props) => {
   const dispatch = useDispatch();
@@ -34,10 +35,13 @@ const ClientList = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [resultsPerPage] = useState(50);
   const [Rerender, setRerender] = useState(false);
-  const [isOpen, setisOpen] = useState(false);
+  // const [isOpen, setisOpen] = useState(false);
   const [show, setShow] = useState({});
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
+  const open = useSelector((state) => state.Filter.isOpen);
+
+  // console.log();
 
   // Sorting
   const [order, setOrder] = useState("asc");
@@ -125,18 +129,16 @@ const ClientList = (props) => {
     <div ref={divRef} className="2xl:px-24 px-4 py-4 ">
       <div>
         <button
+          className=" border-2 border-doc mb-4 text-blue-700  px-2 py-0.5 bg-gray-400
+           hover:bg-blue-600 hover:border-gray-500
+            hover:text-white rounded"
           onClick={() => {
-            setisOpen(true);
+            dispatch(setisOpen(true));
           }}
         >
           SetFilter
         </button>
-        <Filter
-          open={isOpen}
-          onClose={() => {
-            setisOpen(false);
-          }}
-        />
+        <Filter />
       </div>
       <div className="grid grid-cols-7 grid-flow-col items-center border-b border-gray-100 bg-white px-6 py-2 pt-4">
         <div className=" w-screen h-4 flex items-center">
